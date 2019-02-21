@@ -88,9 +88,12 @@ export default class EvolutionSet {
             node.destroy();
         }
 
+        // TODO: Debugging.
+        console.log("Best node:", bestNode);
+
         // Spawn new wave.
         for (let i: number = 0; i < this.options.nodesPerGeneration; i++) {
-            spawnCallback();
+            this.registerNodes(spawnCallback());
         }
 
         return this;

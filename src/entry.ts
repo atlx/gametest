@@ -13,7 +13,7 @@ let spawnInterval: number | undefined = undefined;
 
 // Create the engine and link the canvas.
 const engine: Engine = new Engine(Context.findCanvas("game"), () => {
-    console.log("Rendering");
+    //
 });
 
 // Setup event listeners.
