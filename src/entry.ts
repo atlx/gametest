@@ -3,6 +3,8 @@ import EngineEvent from "./engine-event";
 import Context from "./context";
 import DotEntity from "./entities/dot";
 import FlagEntity from "./entities/flag";
+import EvolutionSet from "./ai/evolution-set";
+import AiNode from "./ai/node";
 
 // Export the flag for global use.
 export let Flag: FlagEntity = null as any;
@@ -16,6 +18,10 @@ const engine: Engine = new Engine(Context.findCanvas("game"), () => {
 
 // Setup event listeners.
 engine.on(EngineEvent.Started, () => {
+    const evolutionSet: EvolutionSet = new EvolutionSet({
+        evolutionTime: 10_000
+    });
+
     // Clear spawn interval if applicable.
     if (spawnInterval !== undefined) {
         clearInterval(spawnInterval);
@@ -24,9 +30,10 @@ engine.on(EngineEvent.Started, () => {
     // Create and assign the global flag.
     Flag = engine.createEntity(FlagEntity);
 
-    spawnInterval = setInterval(() => {
-        engine.createEntity(DotEntity);
-    }, 3000);
+    // Begin the evolution process.
+    evolutionSet.begin((): AiNode => {
+        return engine.createEntity(DotEntity);
+    });
 });
 
 // Start the engine.
