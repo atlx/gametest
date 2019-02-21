@@ -6,3 +6,8 @@ export enum EntityDisplay {
 }
 
 export type EntityColor = Color | string;
+
+export enum EntityRenderStrategy {
+    Absolute,
+    Smooth
+}

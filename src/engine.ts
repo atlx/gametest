@@ -2,6 +2,8 @@ import EventEmitter from "./event-emitter";
 import EngineEvent from "./engine-event";
 import Entity from "./entity";
 import Id from "./id";
+import IVector, {Vector} from "./vector";
+import {EntityRenderStrategy} from "./entity-props";
 
 export type RenderCallback = (time: number) => void;
 
@@ -27,7 +29,7 @@ export default class Engine extends EventEmitter {
         this.running = false;
 
         // Force-bind the render loop.
-        this.renderLoop = this.renderLoop.bind(this);
+        this.prepareRender = this.prepareRender.bind(this);
     }
 
     public registerEntity(entity: Entity): this {
@@ -45,6 +47,9 @@ export default class Engine extends EventEmitter {
         return entity;
     }
 
+    /**
+     * Process entities and rendering.
+     */
     protected render(time: number): void {
         // Clear canvas.
         this.$.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -52,7 +57,29 @@ export default class Engine extends EventEmitter {
         // Invoke all the entities' render function.
         for (const entity of this.entities.values()) {
             entity.prepare(time);
-            entity.render(time);
+
+            // Render if the entity is visible.
+            if (entity.visible) {
+                entity.render(time);
+            }
+
+            // Apply entity's velocity to it's position.
+            let velocity: IVector = entity.velocity;
+
+            if (entity.renderStrategy == EntityRenderStrategy.Smooth) {
+                velocity = {
+                    x: entity.velocity.x * entity.getFriction(),
+                    y: entity.velocity.y * entity.getFriction()
+                };
+            }
+
+            entity.pos = Vector.add(entity.pos, velocity);
+
+            // Apply entity speed.
+            entity.pos = {
+                x: entity.pos.x + entity.getSpeed(),
+                y: entity.pos.y + entity.getSpeed()
+            };
         }
 
         // Invoke the render callback.
@@ -61,13 +88,13 @@ export default class Engine extends EventEmitter {
         }
     }
 
-    protected renderLoop(time: number): void {
+    protected prepareRender(time: number): void {
         // Invoke the render function.
         this.render(time);
 
         // Verify the game is still running.
         if (this.running) {
-            window.requestAnimationFrame(this.renderLoop);
+            window.requestAnimationFrame(this.prepareRender);
         }
     }
 
@@ -77,7 +104,7 @@ export default class Engine extends EventEmitter {
             this.emit(EngineEvent.Started);
 
             // Being the render loop.
-            window.requestAnimationFrame(this.renderLoop);
+            window.requestAnimationFrame(this.prepareRender);
         }
 
         return this;
@@ -112,7 +139,10 @@ export default class Engine extends EventEmitter {
     }
 
     public removeEntity(id: Id): this {
-        this.entities.delete(id);
+        if (this.entities.has(id)) {
+            this.entities.delete(id);
+            this.emit(EngineEvent.EntityRemoved, this.entities.get(id)!);
+        }
 
         return this;
     }

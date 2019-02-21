@@ -1,6 +1,6 @@
 import Behaviour from "../behaviour";
 import Entity from "../entity";
-import Util from "../util";
+import {Vector} from "../vector";
 
 export default class RandomBehaviour extends Behaviour {
     public readonly speedMultiplier: number;
@@ -12,9 +12,6 @@ export default class RandomBehaviour extends Behaviour {
     }
 
     public process(entity: Entity): void {
-        entity.translate({
-            x: Util.randomlyInverse(Math.random() * this.speedMultiplier),
-            y: Util.randomlyInverse(Math.random() * this.speedMultiplier)
-        });
+        entity.velocity = Vector.randomlyInverse(Vector.random(1, 2));
     }
 }

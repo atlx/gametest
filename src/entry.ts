@@ -19,7 +19,7 @@ const engine: Engine = new Engine(Context.findCanvas("game"), () => {
 // Setup event listeners.
 engine.on(EngineEvent.Started, () => {
     const evolutionSet: EvolutionSet = new EvolutionSet({
-        evolutionTime: 10_000
+        evolutionTime: 6_000
     });
 
     // Clear spawn interval if applicable.

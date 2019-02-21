@@ -3,7 +3,7 @@ export default abstract class Util {
      * Returns either 1 or -1.
      */
     public static getRandomInverse(): number {
-        return Util.randomInt(-1, 1) || 1;
+        return Util.getRandomInt(-1, 1) || 1;
     }
 
     /**
@@ -16,7 +16,7 @@ export default abstract class Util {
     /**
      * Generate a random integer number between the specified range.
      */
-    public static randomInt(min: number, max: number): number {
+    public static getRandomInt(min: number, max: number): number {
         min = Math.ceil(min);
         max = Math.floor(max);
 

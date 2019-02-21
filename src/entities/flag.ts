@@ -17,6 +17,6 @@ export default class FlagEntity extends Entity {
     }
 
     public render(): void {
-        this.draw.rect();
+        this.draw.circle();
     }
 }

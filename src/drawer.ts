@@ -16,4 +16,16 @@ export default class Drawer {
 
         return this;
     }
+
+    /**
+     * Draw a circle based off the source entity. The radius is determined by the entity's width.
+     */
+    public circle(): this {
+        this.$.fillStyle = this.entity.color;
+        this.$.beginPath();
+        this.$.arc(this.entity.pos.x, this.entity.pos.y, this.entity.size.x, 0, Math.PI * 2);
+        this.$.fill();
+
+        return this;
+    }
 }

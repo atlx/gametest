@@ -12,7 +12,12 @@ enum EngineEvent {
     /**
      * The render loop was started.
      */
-    Started = "started"
+    Started = "started",
+
+    /**
+     * An entity was destroyed and is no longer being tracked and rendered.
+     */
+    EntityRemoved = "entityRemoved"
 }
 
 export default EngineEvent;
