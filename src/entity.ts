@@ -52,7 +52,11 @@ export default abstract class Entity {
         }
     }
 
+    /**
+     * Remove the node from the engine.
+     */
     public destroy(): void {
+        this.engine.removeEntity(this.id);
     }
 
     /**

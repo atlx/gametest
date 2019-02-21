@@ -106,4 +106,14 @@ export default class Engine extends EventEmitter {
     public getContext(): CanvasRenderingContext2D {
         return this.$;
     }
+
+    public hasEntity(id: Id): boolean {
+        return this.entities.has(id);
+    }
+
+    public removeEntity(id: Id): this {
+        this.entities.delete(id);
+
+        return this;
+    }
 }
