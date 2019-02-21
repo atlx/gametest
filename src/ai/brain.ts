@@ -40,4 +40,15 @@ export default class AiBrain extends Brain {
 
         entity.translate(inst);
     }
+
+    public getInsts(): IVector[] {
+        // Clone instructions array to prevent returning reference.
+        return [...this.insts];
+    }
+
+    public setInsts(insts: IVector[]): this {
+        this.insts = insts;
+
+        return this;
+    }
 }

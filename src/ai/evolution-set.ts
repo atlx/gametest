@@ -1,4 +1,5 @@
 import AiNode from "./node";
+import Entity from "../entity";
 
 export type SpawnCallback = () => AiNode;
 
@@ -76,7 +77,7 @@ export default class EvolutionSet {
             throw new Error("The evolution set contains no nodes");
         }
 
-        let bestNode: AiNode = this.nodes[0];
+        let bestNode: AiNode = null as any;
 
         for (const node of this.nodes) {
             // Replace existing best node if applicable.
@@ -93,7 +94,13 @@ export default class EvolutionSet {
 
         // Spawn new wave.
         for (let i: number = 0; i < this.options.nodesPerGeneration; i++) {
-            this.registerNodes(spawnCallback());
+            const child: AiNode = spawnCallback();
+
+            if (bestNode != null) {
+                child.brain.setInsts(bestNode.brain.getInsts());
+            }
+
+            this.registerNodes(child);
         }
 
         return this;

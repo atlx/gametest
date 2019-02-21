@@ -5,6 +5,8 @@ import AiNode from "../ai/node";
 import AiBrain from "../ai/brain";
 
 export default class DotEntity extends Entity implements AiNode {
+    public brain!: AiBrain;
+
     public get distanceToFlag(): number {
         return GameMath.distanceBetween(this.pos, Flag.pos);
     }
