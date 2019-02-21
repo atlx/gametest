@@ -2,6 +2,7 @@ import Brain from "../brain";
 import IVector, {Vector} from "../vector";
 import Entity from "../entity";
 import Direction from "../direction";
+import Util from "../util";
 
 export default class AiBrain extends Brain {
     /**
@@ -18,6 +19,7 @@ export default class AiBrain extends Brain {
     }
 
     protected insts: IVector[];
+    protected increment?: number;
 
     /**
      * @param {number} instLength The amount of random instructions to create.
@@ -25,7 +27,8 @@ export default class AiBrain extends Brain {
     public constructor(instLength: number, increment?: number) {
         super();
 
-        this.insts = AiBrain.createRandomInsts(instLength, increment);
+        this.increment = increment;
+        this.insts = AiBrain.createRandomInsts(instLength, this.increment);
     }
 
     public process(entity: Entity): void {
@@ -48,6 +51,16 @@ export default class AiBrain extends Brain {
 
     public setInsts(insts: IVector[]): this {
         this.insts = insts;
+
+        return this;
+    }
+
+    public mutate(): this {
+        for (let i: number = 0; i < this.insts.length; i++) {
+            if (Util.chance()) {
+                this.insts[i] = Vector.increment(Direction.random(), this.increment || 0);
+            }
+        }
 
         return this;
     }

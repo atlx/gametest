@@ -98,6 +98,9 @@ export default class EvolutionSet {
 
             if (bestNode != null) {
                 child.brain.setInsts(bestNode.brain.getInsts());
+
+                // Mutate child.
+                child.brain.mutate();
             }
 
             this.registerNodes(child);

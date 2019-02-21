@@ -22,4 +22,8 @@ export default abstract class Util {
 
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
+
+    public static chance(): boolean {
+        return Util.getRandomInt(0, 1) === 0;
+    }
 }
