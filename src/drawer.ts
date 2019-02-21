@@ -11,6 +11,7 @@ export default class Drawer extends Concept {
     }
 
     public rect(): this {
+        this.$.fillStyle = this.entity.color;
         this.$.fillRect(this.entity.pos.x, this.entity.pos.y, this.entity.size.x, this.entity.size.y);
 
         return this;
