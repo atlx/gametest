@@ -14,8 +14,6 @@ export default class Engine extends EventEmitter {
         this.entities = new Map();
     }
 
-
-
     public getFps(): number {
         return this.fps;
     }
