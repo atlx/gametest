@@ -1,0 +1,12 @@
+{
+    "name": "gametest",
+    "version": "1.0.0",
+    "description": "A test game engine written in TypeScript",
+    "main": "index.js",
+    "scripts": {
+        "build": "tsc"
+    },
+    "keywords": [],
+    "author": "Atlas <cloudrex@outlook.com>",
+    "license": "MIT"
+}
