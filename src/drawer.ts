@@ -1,12 +1,12 @@
 import Entity from "./entity";
-import Concept from "./concept";
 
-export default class Drawer extends Concept {
+export default class Drawer {
+    protected readonly $: CanvasRenderingContext2D;
+
     protected entity: Entity;
 
     public constructor(context: CanvasRenderingContext2D, entity: Entity) {
-        super(context);
-
+        this.$ = context;
         this.entity = entity;
     }
 

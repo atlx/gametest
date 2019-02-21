@@ -9,16 +9,18 @@ export type RenderCallback = (time: number) => void;
 export default class Engine extends EventEmitter {
     protected readonly renderCallback?: RenderCallback;
     protected readonly entities: Map<Id, Entity>;
+    protected readonly canvas: HTMLCanvasElement;
     protected readonly $: CanvasRenderingContext2D;
 
     protected fps: number;
     protected running: boolean;
     protected gameLoopInterval?: number;
 
-    public constructor(context: CanvasRenderingContext2D, renderCallback?: RenderCallback) {
+    public constructor(canvas: HTMLCanvasElement, renderCallback?: RenderCallback) {
         super();
 
-        this.$ = context;
+        this.canvas = canvas;
+        this.$ = this.canvas.getContext("2d")!;
         this.fps = 30;
         this.entities = new Map();
         this.renderCallback = renderCallback;
@@ -34,18 +36,22 @@ export default class Engine extends EventEmitter {
         return this;
     }
 
-    public createEntity(entityType: any): this {
-        const entity: Entity = new entityType(this.$);
+    public createEntity(entityType: any): any {
+        const entity: Entity = new entityType(this);
 
         // Register the newly created entity automatically.
         this.registerEntity(entity);
 
-        return this;
+        return entity;
     }
 
     protected render(time: number): void {
+        // Clear canvas.
+        this.$.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
         // Invoke all the entities' render function.
         for (const entity of this.entities.values()) {
+            entity.prepare(time);
             entity.render(time);
         }
 
@@ -95,5 +101,9 @@ export default class Engine extends EventEmitter {
         this.emit(EngineEvent.FpsChanged);
 
         return this;
+    }
+
+    public getContext(): CanvasRenderingContext2D {
+        return this.$;
     }
 }

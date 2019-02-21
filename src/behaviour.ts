@@ -1,5 +1,5 @@
-import Concept from "./concept";
+import Entity from "./entity";
 
-export default abstract class Behaviour extends Concept {
-    public abstract process(): void;
+export default abstract class Behaviour {
+    public abstract process(entity: Entity, context: CanvasRenderingContext2D, time: number): void;
 }
