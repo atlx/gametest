@@ -156,4 +156,12 @@ export default abstract class Entity {
     public getEngine(): Engine {
         return this.engine;
     }
+
+    public mergePos(...positions: Partial<IVector>[]): this {
+        for (const pos of positions) {
+            this.pos = Vector.merge(this.pos, pos);
+        }
+
+        return this;
+    }
 }

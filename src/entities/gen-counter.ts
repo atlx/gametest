@@ -11,7 +11,7 @@ export default class GenCounterEntity extends TextEntity {
     }
 
     public setup(): void {
-        this.pos = Vector.merge(this.pos, this.engine.align.bottom);
+        this.mergePos(this.engine.align.margin(10).bottom, this.engine.align.left);
     }
 
     public render(): void {

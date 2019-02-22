@@ -5,6 +5,7 @@
     "main": "index.js",
     "scripts": {
         "build": "webpack --config webpack.config.js",
+        "watch": "webpack --config webpack.config.js --watch",
         "start": "npm run build && start public/index.html"
     },
     "keywords": [],
