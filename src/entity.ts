@@ -8,7 +8,6 @@ import Engine from "./engine";
 import Brain from "./brain";
 
 export default abstract class Entity {
-    public draw: Drawer;
     public readonly id: Id;
 
     public renderStrategy: EntityRenderStrategy;
@@ -19,15 +18,14 @@ export default abstract class Entity {
     public tags: string[];
     public color: EntityColor;
     public behaviours: Behaviour[];
-    public brain?: Brain;
     public visible: boolean;
     public zPosition: number;
 
     protected friction: number;
     protected speed: number;
-
+    protected brain?: Brain;
+    protected draw!: Drawer;
     protected engine!: Engine;
-    protected $!: CanvasRenderingContext2D;
 
     public constructor() {
         // Set default entity properties.
@@ -36,7 +34,6 @@ export default abstract class Entity {
         this.pos = Vector.origin;
         this.size = Vector.origin;
         this.velocity = Vector.origin;
-        this.draw = new Drawer(this.$, this);
         this.id = IdGenerator.next();
         this.tags = [];
         this.color = Color.White;
@@ -45,13 +42,28 @@ export default abstract class Entity {
         this.friction = 1;
         this.visible = true;
         this.zPosition = 1;
-
-        // Invoke the (possibly) inherited setup function.
-        this.setup();
     }
 
     public setup(): void {
         //
+    }
+
+    protected get $(): CanvasRenderingContext2D {
+        return this.engine.getContext();
+    }
+
+    public setBrain(brain: Brain): this {
+        this.brain = brain.setEntity(this);
+
+        return this;
+    }
+
+    public getBrain(): Brain | undefined {
+        return this.brain;
+    }
+
+    public hasBrain(): boolean {
+        return this.brain !== undefined;
     }
 
     /**
@@ -138,7 +150,10 @@ export default abstract class Entity {
 
     public setEngine(engine: Engine) {
         this.engine = engine;
-        this.$ = this.engine.getContext();
-        this.draw = new Drawer(this.$, this);
+        this.draw = new Drawer(this);
+    }
+
+    public getEngine(): Engine {
+        return this.engine;
     }
 }

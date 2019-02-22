@@ -1,4 +1,5 @@
 import TextEntity from "./text";
+import {Vector} from "../vector";
 
 export default class GenCounterEntity extends TextEntity {
     protected counter: number;
@@ -10,10 +11,7 @@ export default class GenCounterEntity extends TextEntity {
     }
 
     public setup(): void {
-        this.pos = {
-            x: 100,
-            y: 500
-        };
+        this.pos = Vector.merge(this.pos, this.engine.align.bottom);
     }
 
     public render(): void {

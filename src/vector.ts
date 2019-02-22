@@ -54,4 +54,14 @@ export abstract class Vector {
     public static increment(vector: IVector, by: number): IVector {
         return Vector.add(vector, Vector.fromSingle(by));
     }
+
+    /**
+     * Merge two (possibly) partial vectors into a single vector.
+     */
+    public static merge(vectorA: Partial<IVector>, vectorB: Partial<IVector>): IVector {
+        return {
+            x: (vectorA.x || 0) + (vectorB.x || 0),
+            y: (vectorA.y || 0) + (vectorB.y || 0)
+        };
+    }
 }

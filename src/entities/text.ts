@@ -1,4 +1,5 @@
 import Entity from "../entity";
+import {Vector} from "../vector";
 
 export default class TextEntity extends Entity {
     public text: string;
@@ -15,6 +16,7 @@ export default class TextEntity extends Entity {
     }
 
     public render(): void {
+        this.$.font = `${this.fontSize}px monospace`;
         this.$.fillStyle = this.color;
         this.$.fillText(this.text, this.pos.x, this.pos.y);
     }

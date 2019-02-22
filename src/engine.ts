@@ -4,11 +4,14 @@ import Entity from "./entity";
 import Id from "./id";
 import IVector, {Vector} from "./vector";
 import {EntityRenderStrategy} from "./entity-props";
+import Alignment from "./alignment";
 
 export type RenderCallback = (time: number) => void;
 
 // TODO: Make use of FPS (instead of window.requestAnimationCallback).
 export default class Engine extends EventEmitter {
+    public readonly align: Alignment;
+
     protected readonly renderCallback?: RenderCallback;
     protected readonly entities: Map<Id, Entity>;
     protected readonly canvas: HTMLCanvasElement;
@@ -27,14 +30,25 @@ export default class Engine extends EventEmitter {
         this.entities = new Map();
         this.renderCallback = renderCallback;
         this.running = false;
+        this.align = new Alignment(this);
 
         // Force-bind the render loop.
         this.prepareRender = this.prepareRender.bind(this);
     }
 
+    public get canvasSize(): IVector {
+        return {
+            x: this.canvas.width,
+            y: this.canvas.height
+        };
+    }
+
     public registerEntity(entity: Entity): this {
         this.entities.set(entity.id, entity);
         entity.setEngine(this);
+
+        // Invoke the entity's setup method.
+        entity.setup();
 
         return this;
     }
