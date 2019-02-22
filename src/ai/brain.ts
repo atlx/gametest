@@ -3,6 +3,7 @@ import IVector, {Vector} from "../vector";
 import Entity from "../entity";
 import Direction from "../direction";
 import Util from "../util";
+import AiNode from "./node";
 
 export default class AiBrain extends Brain {
     /**
@@ -18,8 +19,12 @@ export default class AiBrain extends Brain {
         return result;
     }
 
+    protected entity!: Entity & AiNode;
     protected insts: IVector[];
+    protected mutationQueue: number[];
     protected increment?: number;
+    protected counter: number;
+    protected lastFitness: number;
 
     /**
      * @param {number} instLength The amount of random instructions to create.
@@ -28,20 +33,31 @@ export default class AiBrain extends Brain {
         super();
 
         this.increment = increment;
+        this.mutationQueue = [];
         this.insts = AiBrain.createRandomInsts(instLength, this.increment);
+        this.counter = 0;
+        this.lastFitness = -1;
     }
 
-    public process(entity: Entity): void {
-        const inst: IVector | undefined = this.insts.pop();
+    public process(node: Entity & AiNode): void {
+        const inst: IVector | undefined = this.insts[++this.counter];
 
         if (inst == undefined) {
             // Destroy entity after using up all instructions.
-            entity.destroy();
+            node.destroy();
 
             return;
         }
 
-        entity.translate(inst);
+        node.translate(inst);
+        this.lastFitness = node.fitness;
+    }
+
+    public postRender(): void {
+        // Add bad instruction to mutation queue.
+        if (this.lastFitness !== -1 && this.entity.fitness < this.lastFitness) {
+            this.mutationQueue.push(this.counter);
+        }
     }
 
     public getInsts(): IVector[] {
@@ -56,9 +72,9 @@ export default class AiBrain extends Brain {
     }
 
     public mutate(): this {
-        for (let i: number = 0; i < this.insts.length; i++) {
+        for (let i: number = 0; i < this.mutationQueue.length; i++) {
             if (Util.chance()) {
-                this.insts[i] = Vector.increment(Direction.random(), this.increment || 0);
+                this.insts[this.mutationQueue[i]] = Vector.increment(Direction.random(), this.increment || 0);
             }
         }
 

@@ -5,9 +5,14 @@ import DotEntity from "./entities/dot";
 import FlagEntity from "./entities/flag";
 import EvolutionSet from "./ai/evolution-set";
 import AiNode from "./ai/node";
+import TextEntity from "./entities/text";
+import GenCounterEntity from "./entities/gen-counter";
 
 // Export the flag for global use.
 export let Flag: FlagEntity = null as any;
+
+// Export the generation counter text for global use.
+export let GenCounterText: GenCounterEntity = null as any;
 
 let spawnInterval: number | undefined = undefined;
 
@@ -26,6 +31,9 @@ engine.on(EngineEvent.Started, () => {
     if (spawnInterval !== undefined) {
         clearInterval(spawnInterval);
     }
+
+    // Create generation counter text.
+    GenCounterText = engine.createEntity(GenCounterEntity);
 
     // Create and assign the global flag.
     Flag = engine.createEntity(FlagEntity);

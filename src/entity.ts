@@ -8,7 +8,7 @@ import Engine from "./engine";
 import Brain from "./brain";
 
 export default abstract class Entity {
-    public readonly draw: Drawer;
+    public draw: Drawer;
     public readonly id: Id;
 
     public renderStrategy: EntityRenderStrategy;
@@ -26,13 +26,10 @@ export default abstract class Entity {
     protected friction: number;
     protected speed: number;
 
-    protected readonly engine: Engine;
-    protected readonly $: CanvasRenderingContext2D;
+    protected engine!: Engine;
+    protected $!: CanvasRenderingContext2D;
 
-    public constructor(engine: Engine) {
-        this.engine = engine;
-        this.$ = engine.getContext();
-
+    public constructor() {
         // Set default entity properties.
         this.renderStrategy = EntityRenderStrategy.Smooth;
         this.display = EntityDisplay.Absolute;
@@ -69,6 +66,13 @@ export default abstract class Entity {
         // Process all behaviours.
         for (const behaviour of this.behaviours) {
             behaviour.process(this, this.$, time);
+        }
+    }
+
+    public postRender(time: number): void {
+        // Invoke the brain's post-render handler if applicable.
+        if (this.brain !== undefined) {
+            this.brain.postRender(time);
         }
     }
 
@@ -130,5 +134,11 @@ export default abstract class Entity {
 
     public clone(): Entity {
         return Object.assign({}, this);
+    }
+
+    public setEngine(engine: Engine) {
+        this.engine = engine;
+        this.$ = this.engine.getContext();
+        this.draw = new Drawer(this.$, this);
     }
 }

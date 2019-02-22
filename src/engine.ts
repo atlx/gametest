@@ -34,12 +34,13 @@ export default class Engine extends EventEmitter {
 
     public registerEntity(entity: Entity): this {
         this.entities.set(entity.id, entity);
+        entity.setEngine(this);
 
         return this;
     }
 
     public createEntity(entityType: any): any {
-        const entity: Entity = new entityType(this);
+        const entity: Entity = new entityType();
 
         // Register the newly created entity automatically.
         this.registerEntity(entity);
@@ -62,6 +63,9 @@ export default class Engine extends EventEmitter {
             if (entity.visible) {
                 entity.render(time);
             }
+
+            // Invoke post-render handler.
+            entity.postRender(time);
 
             // Apply entity's velocity to it's position.
             let velocity: IVector = entity.velocity;
@@ -134,6 +138,10 @@ export default class Engine extends EventEmitter {
         return this.$;
     }
 
+    public getEntity(id: Id): Entity | undefined {
+        return this.entities.get(id);
+    }
+
     public hasEntity(id: Id): boolean {
         return this.entities.has(id);
     }
@@ -145,5 +153,33 @@ export default class Engine extends EventEmitter {
         }
 
         return this;
+    }
+
+    public findEntitiesByTags(...tags: string[]): Entity[] {
+        const result: Entity[] = [];
+
+        for (const [id, entity] of this.entities) {
+            for (const tag of tags) {
+                if (entity.tags.includes(tag)) {
+                    result.push(entity);
+
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public findEntitiesOfType(type: any): Entity[] {
+        const result: Entity[] = [];
+
+        for (const [id, entity] of this.entities) {
+            if (entity instanceof type) {
+                result.push(entity);
+            }
+        }
+
+        return result;
     }
 }
