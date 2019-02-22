@@ -4,19 +4,15 @@ import Entity from "../entity";
 import Direction from "../direction";
 import Util from "../util";
 import AiNode from "./node";
+import {IGene, GeneType} from "./evolution-set";
 
 export default class AiBrain extends Brain {
     /**
      * Creates an array with random instructions of the specified length.
      */
-    public static createRandomInsts(length: number, increment: number = 0): IVector[] {
-        const result: IVector[] = [];
-
-        for (let i: number = 0; i < length; i++) {
-            result.push(Vector.increment(Direction.random(), increment));
-        }
-
-        return result;
+    public static generateGene(): IGene {
+        // TODO
+        throw new Error("Not yet implemented");
     }
 
     protected entity!: Entity & AiNode;
@@ -34,7 +30,7 @@ export default class AiBrain extends Brain {
 
         this.increment = increment;
         this.mutationQueue = [];
-        this.insts = AiBrain.createRandomInsts(instLength, this.increment);
+        this.insts = AiBrain.generateGene(instLength, this.increment);
         this.counter = 0;
         this.lastFitness = -1;
     }

@@ -1,5 +1,4 @@
 import TextEntity from "./text";
-import {Vector} from "../vector";
 
 export default class GenCounterEntity extends TextEntity {
     protected counter: number;

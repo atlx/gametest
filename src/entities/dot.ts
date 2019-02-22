@@ -23,7 +23,7 @@ export default class DotEntity extends Entity implements AiNode {
 
         this.speed = 1;
         this.friction = 0.98;
-        this.brain = new AiBrain(100_000, 3);
+        this.setBrain(new AiBrain(100_000, 3));
     }
 
     public render(): void {

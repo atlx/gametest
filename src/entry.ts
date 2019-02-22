@@ -1,12 +1,10 @@
 import Engine from "./engine";
 import EngineEvent from "./engine-event";
 import Context from "./context";
-import DotEntity from "./entities/dot";
 import FlagEntity from "./entities/flag";
 import EvolutionSet from "./ai/evolution-set";
-import AiNode from "./ai/node";
-import TextEntity from "./entities/text";
 import GenCounterEntity from "./entities/gen-counter";
+import DotEntity from "./entities/dot";
 
 // Export the flag for global use.
 export let Flag: FlagEntity = null as any;
@@ -38,8 +36,8 @@ engine.on(EngineEvent.Started, () => {
     // Create and assign the global flag.
     Flag = engine.createEntity(FlagEntity);
 
-    // Begin the evolution process.
-    evolutionSet.begin((): AiNode => {
+    // Begin the evolution cycle.
+    evolutionSet.begin(() => {
         return engine.createEntity(DotEntity);
     });
 });

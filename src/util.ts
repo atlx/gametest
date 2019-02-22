@@ -23,7 +23,14 @@ export default abstract class Util {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    public static chance(): boolean {
-        return Util.getRandomInt(0, 1) === 0;
+    public static chance(percentage: number = 50): boolean {
+        if (percentage < 1) {
+            percentage = 1;
+        }
+        else if (percentage > 99) {
+            percentage = 99;
+        }
+
+        return Util.getRandomInt(0, 100 - Math.round(percentage * 100)) === 0;
     }
 }
